@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tasky/constants.dart';
+import 'package:tasky/features/auth/ui/views/login_view.dart';
 import 'package:tasky/features/auth/ui/widgets/custom_button.dart';
 import 'package:tasky/features/auth/ui/widgets/custom_text_field.dart';
 
@@ -71,14 +72,19 @@ class RegisterView extends StatelessWidget {
               CustomButton(
                 buttonName: 'Register',
               ),
-
-              Center(
-                child: Text.rich(TextSpan(
-                  children: [
-                    TextSpan(text: 'Already have an account? ' , style: TextStyle(fontSize: 14 , color: Colors.grey)),
-                    TextSpan(text: 'Login' , style: TextStyle(fontSize: 16 , color: KPrimaryColor))
-                  ],
-                )),
+              SizedBox(
+                height: 5,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Already have an account? ' , style: TextStyle(color: Colors.grey , fontSize: 14),),
+                  GestureDetector(
+                      onTap: (){
+                        Navigator.pushReplacementNamed(context, LoginView.routeName);
+                      },
+                      child: Text('Login' , style: TextStyle(fontSize: 16 , color: KPrimaryColor))),
+                ],
               ),
             ],
           ),

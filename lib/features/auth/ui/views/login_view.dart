@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tasky/constants.dart';
+import 'package:tasky/features/auth/ui/views/register_view.dart';
 import 'package:tasky/features/auth/ui/widgets/custom_button.dart';
 import 'package:tasky/features/auth/ui/widgets/custom_text_field.dart';
 
@@ -49,16 +50,29 @@ class LoginView extends StatelessWidget {
               CustomButton(
                 buttonName: 'Login',
               ),
-
-
-              Center(
-                child: Text.rich(TextSpan(
-                  children: [
-                    TextSpan(text: 'Don’t have an account? ' , style: TextStyle(fontSize: 14 , color: Colors.grey)),
-                    TextSpan(text: 'Register' , style: TextStyle(fontSize: 16 , color: KPrimaryColor))
-                  ],
-                )),
+              SizedBox(
+                height: 5,
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Don’t have an account? ' , style: TextStyle(color: Colors.grey , fontSize: 14),),
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.pushNamed(context, RegisterView.routeName);
+                    },
+                      child: Text('Register' , style: TextStyle(fontSize: 16 , color: KPrimaryColor))),
+                ],
+              ),
+              // Center(
+              //   child: Text.rich(TextSpan(
+              //     text: 'Don’t have an account? ',
+              //     style: TextStyle(color: Colors.grey , fontSize: 14),
+              //     children: [
+              //       TextSpan(text: 'Register' , style: TextStyle(fontSize: 16 , color: KPrimaryColor))
+              //     ],
+              //   )),
+              // ),
             ],
           ),
         ),

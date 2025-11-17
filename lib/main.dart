@@ -14,11 +14,11 @@ class Tasky extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginView(),
       routes: {
         LoginView.routeName : (context)=>LoginView(),
         RegisterView.routeName : (context)=>RegisterView(),
       },
+      initialRoute: LoginView.routeName,
     );
   }
 }

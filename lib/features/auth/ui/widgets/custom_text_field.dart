@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
-  const CustomTextField({
-    super.key, required this.hint,this.suffixIcon
+   CustomTextField({
+    super.key, required this.hint,this.suffixIcon,
+     this.controller
   });
   final String hint;
   final String? suffixIcon;
+   TextEditingController? controller;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: controller,
       validator: (data){
         if(data == null || data!.isEmpty )
           {

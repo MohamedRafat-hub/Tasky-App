@@ -1,8 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:tasky/features/auth/ui/views/login_view.dart';
 import 'package:tasky/features/auth/ui/views/register_view.dart';
-
+import 'package:tasky/home_view.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -23,8 +24,9 @@ class Tasky extends StatelessWidget {
       routes: {
         LoginView.routeName: (context) => LoginView(),
         RegisterView.routeName: (context) => RegisterView(),
+        HomeView.routeName : (context)=>HomeView(),
       },
-      initialRoute: LoginView.routeName,
+      initialRoute: FirebaseAuth.instance.currentUser == null ? LoginView.routeName : HomeView.routeName,
     );
   }
 }

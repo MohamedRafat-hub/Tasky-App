@@ -8,7 +8,13 @@ class CustomTextField extends StatelessWidget {
   final String? suffixIcon;
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
+      validator: (data){
+        if(data == null || data!.isEmpty )
+          {
+            return 'Field is required';
+          }
+      },
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: TextStyle(color: Colors.grey , fontSize: 14),

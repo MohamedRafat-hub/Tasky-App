@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "555934639780",
+    "project_id": "tasky-82b5b",
+    "storage_bucket": "tasky-82b5b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:555934639780:android:e3541fee93f73692462831",
+        "android_client_info": {
+          "package_name": "com.example.tasky"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBfpZTk_G7p7UGbz8e3TFBZEM5YHuy8H34"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

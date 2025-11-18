@@ -8,7 +8,8 @@ import 'package:tasky/constants.dart';
 import 'package:tasky/features/auth/ui/views/register_view.dart';
 import 'package:tasky/features/auth/ui/widgets/custom_button.dart';
 import 'package:tasky/features/auth/ui/widgets/custom_text_field.dart';
-import 'package:tasky/home_view.dart';
+
+import '../../../home/ui/views/home_view.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});

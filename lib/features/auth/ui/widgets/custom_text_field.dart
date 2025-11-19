@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class CustomTextField extends StatelessWidget {
    CustomTextField({
     super.key, required this.hint,this.suffixIcon,
-     this.controller
+     this.controller,
   });
   final String hint;
   final String? suffixIcon;
@@ -13,7 +13,7 @@ class CustomTextField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       validator: (data){
-        if(data == null || data!.isEmpty )
+         if(data == null || data!.isEmpty )
           {
             return 'Field is required';
           }

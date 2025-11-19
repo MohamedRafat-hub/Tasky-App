@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
@@ -25,6 +24,7 @@ class _LoginViewState extends State<LoginView> {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   bool isLoading = false;
+  AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,6 +75,59 @@ class _LoginViewState extends State<LoginView> {
                     suffixIcon: 'assets/icons/frame-icon.png',
                   ),
                   SizedBox(
+                    height: 5,
+                  ),
+                  Row(
+                    children: [
+                      Spacer(),
+                      GestureDetector(
+                          onTap: ()async {
+                            try {
+                              await FirebaseAuth.instance
+                                  .sendPasswordResetEmail(email: email.text);
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: Text('Reset Password'),
+                                      content: Text(
+                                          'Please check your email to create a new password'),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text(
+                                              'Ok',
+                                              style: TextStyle(
+                                                  color: KPrimaryColor,
+                                                  fontSize: 20),
+                                            )),
+                                      ],
+                                    );
+                                  });
+                            } on Exception catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content:
+                                  Text('Make sure the email address you entered is correct.'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+
+                          },
+                          child: Text(
+                            'Forget password?',
+                            style: TextStyle(
+                                decoration: TextDecoration.underline,
+                                decorationColor: KPrimaryColor,
+                                color: KPrimaryColor,
+                                fontSize: 16),
+                          )),
+                    ],
+                  ),
+                  SizedBox(
                     height: 70,
                   ),
                   CustomButton(
@@ -88,6 +141,8 @@ class _LoginViewState extends State<LoginView> {
                                   email: email.text, password: password.text);
                           isLoading = false;
                           setState(() {});
+                          email.clear();
+                          password.clear();
                           Navigator.pushReplacementNamed(
                               context, HomeView.routeName);
                         } on FirebaseAuthException catch (e) {
@@ -96,21 +151,30 @@ class _LoginViewState extends State<LoginView> {
                           if (e.code == 'user-not-found') {
                             log('No user found for that email.');
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('No user found for that email.') , backgroundColor: Colors.red,),
+                              SnackBar(
+                                content: Text('No user found for that email.'),
+                                backgroundColor: Colors.red,
+                              ),
                             );
                           } else if (e.code == 'wrong-password') {
                             print('Wrong password provided for that user.');
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Wrong password provided for that user.') , backgroundColor: Colors.red,),
+                              SnackBar(
+                                content: Text(
+                                    'Wrong password provided for that user.'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          } else {
+                            log('There was an error please tyr again');
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content:
+                                    Text('There was an error please try again'),
+                                backgroundColor: Colors.red,
+                              ),
                             );
                           }
-                          else
-                            {
-                              log('There was an error please tyr again');
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('There was an error please tyr again') , backgroundColor: Colors.red,),
-                              );
-                            }
                         }
                       }
                     },
@@ -128,11 +192,12 @@ class _LoginViewState extends State<LoginView> {
                       ),
                       GestureDetector(
                           onTap: () {
-                            Navigator.pushNamed(context, RegisterView.routeName);
+                            Navigator.pushNamed(
+                                context, RegisterView.routeName);
                           },
                           child: Text('Register',
-                              style:
-                                  TextStyle(fontSize: 16, color: KPrimaryColor))),
+                              style: TextStyle(
+                                  fontSize: 16, color: KPrimaryColor))),
                     ],
                   ),
                   // Center(

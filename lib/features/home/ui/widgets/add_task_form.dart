@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tasky/features/auth/ui/widgets/custom_text_field.dart';
 
@@ -13,11 +16,13 @@ class AddTaskForm extends StatefulWidget {
 }
 
 class _AddTaskFormState extends State<AddTaskForm> {
-  GlobalKey<FormState>formKey = GlobalKey();
+  GlobalKey<FormState> formKey = GlobalKey();
   TextEditingController title = TextEditingController();
   TextEditingController description = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    CollectionReference tasks = FirebaseFirestore.instance.collection('tasks');
     return Form(
       key: formKey,
       child: Column(
@@ -31,8 +36,8 @@ class _AddTaskFormState extends State<AddTaskForm> {
             'AddTask',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
-          CustomTextField(hint: 'Title' , controller: title),
-          CustomTextField(hint: 'Description' , controller: description),
+          CustomTextField(hint: 'Title', controller: title),
+          CustomTextField(hint: 'Description', controller: description),
           Row(
             children: [
               Image.asset(
@@ -50,17 +55,51 @@ class _AddTaskFormState extends State<AddTaskForm> {
               ),
             ],
           ),
-          CustomButton(buttonName: 'AddTask' , onTap: (){
-            if(formKey.currentState!.validate())
-            {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Task added Successfully')));
-            }
-          },),
+          CustomButton(
+            buttonName: 'AddTask',
+            onTap: () async {
+
+              if (formKey.currentState!.validate()) {
+                await addTask(tasks , context);
+              }
+            },
+          ),
           SizedBox(
-            height:25 ,
+            height: 25,
           ),
         ],
       ),
     );
+  }
+
+   addTask(CollectionReference<Object?> tasks , BuildContext context) async {
+    try {
+      await tasks
+          .add({
+            'title': title.text,
+            'description': description.text, // 42
+          });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Center(
+            child: Text(
+                'Task added successfully' , style: TextStyle(fontSize: 16),),
+          ),
+          backgroundColor: Colors.green,
+        ),
+      );
+      Navigator.pop(context);
+    } on Exception catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Center(
+            child: Text(
+                '"Failed to add user: $e"' , style: TextStyle(fontSize: 16 ,color: Colors.white),),
+          ),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }

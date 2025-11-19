@@ -12,6 +12,7 @@ import '../../../home/ui/views/home_view.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
+
   static const routeName = 'RegisterView';
 
   @override
@@ -25,6 +26,7 @@ class _RegisterViewState extends State<RegisterView> {
   TextEditingController password = TextEditingController();
   TextEditingController confirmPassword = TextEditingController();
   bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,7 +50,7 @@ class _RegisterViewState extends State<RegisterView> {
                   SizedBox(
                     height: 50,
                   ),
-                  Text('Username' , style: TextStyle(fontSize: 16),),
+                  Text('Username', style: TextStyle(fontSize: 16),),
                   SizedBox(
                     height: 5,
                   ),
@@ -59,18 +61,25 @@ class _RegisterViewState extends State<RegisterView> {
                   SizedBox(
                     height: 25,
                   ),
-                  Text('Email' , style: TextStyle(fontSize: 16),),
+                  Text('Email', style: TextStyle(fontSize: 16),),
                   SizedBox(
                     height: 5,
                   ),
                   CustomTextField(
+                    //     bool isEmailValid = RegExp(
+                    //     r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                    // ).hasMatch(value);
+
+                    //       if (!isEmailValid) {
+                    // return 'Please enter a valid email';
+                    // }
                     controller: email,
                     hint: 'enter email...',
                   ),
                   SizedBox(
                     height: 25,
                   ),
-                  Text('Password' , style: TextStyle(fontSize: 16),),
+                  Text('Password', style: TextStyle(fontSize: 16),),
                   SizedBox(
                     height: 5,
                   ),
@@ -82,7 +91,7 @@ class _RegisterViewState extends State<RegisterView> {
                   SizedBox(
                     height: 25,
                   ),
-                  Text('Confirm password' , style: TextStyle(fontSize: 16),),
+                  Text('Confirm password', style: TextStyle(fontSize: 16),),
                   SizedBox(
                     height: 5,
                   ),
@@ -95,50 +104,73 @@ class _RegisterViewState extends State<RegisterView> {
                     height: 70,
                   ),
                   CustomButton(
-                    onTap: () async{
-                      if(formKey.currentState!.validate())
-                        {
-                          try {
-                            isLoading = true;
-                            setState(() {
+                    onTap: () async {
+                      if (password.text != confirmPassword.text) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(
+                              'The password is not equal confirm password please check it'),
+                            backgroundColor: Colors.red,),
+                        );
+                      }
+                      else if (formKey.currentState!.validate()) {
+                        try {
+                          isLoading = true;
+                          setState(() {
 
-                            });
-                            final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                              email: email.text,
-                              password: password.text,
-                            );
-                            isLoading = false;
-                            setState(() {
+                          });
+                          final credential = await FirebaseAuth.instance
+                              .createUserWithEmailAndPassword(
+                            email: email.text,
+                            password: password.text,
+                          );
+                          email.clear();
+                          password.clear();
+                          confirmPassword.clear();
+                          username.clear();
+                          isLoading = false;
+                          setState(() {
 
-                            });
-                            log('User created');
-                            Navigator.pushReplacementNamed(context, HomeView.routeName);
-                          } on FirebaseAuthException catch (e) {
-                            isLoading = false;
-                            setState(() {
+                          });
+                          log('User created');
+                          Navigator.pushReplacementNamed(
+                              context, HomeView.routeName);
+                        } on FirebaseAuthException catch (e) {
+                          isLoading = false;
+                          setState(() {
 
-                            });
-                            if (e.code == 'weak-password') {
-                              log('The password provided is too weak.');
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('The password provided is too weak.') , backgroundColor: Colors.red,),
-                              );
-                            } else if (e.code == 'email-already-in-use') {
-                              log('The account already exists for that email.');
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('The account already exists for that email.') , backgroundColor: Colors.red,),
-                              );
-                            }
-                          } catch (e) {
-                            isLoading = false;
-                            setState(() {
-                            });
-                            log(e.toString());
+                          });
+                          if (e.code == 'weak-password') {
+                            log('The password provided is too weak.');
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('There was an error please tyr again') , backgroundColor: Colors.red,),
+                              SnackBar(content: Text(
+                                  'The password provided is too weak.'),
+                                backgroundColor: Colors.red,),
+                            );
+                          } else if (e.code == 'email-already-in-use') {
+                            log('The account already exists for that email.');
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(
+                                  'The account already exists for that email.'),
+                                backgroundColor: Colors.red,),
                             );
                           }
+                        } catch (e) {
+                          isLoading = false;
+                          setState(() {});
+                          log(e.toString());
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(
+                                'There was an error please tyr again'),
+                              backgroundColor: Colors.red,),
+                          );
                         }
+                      }
+                      else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(
+                                'There was an error please try again'),
+                              backgroundColor: Colors.red,));
+                      }
                     },
                     buttonName: 'Register',
                   ),
@@ -148,12 +180,15 @@ class _RegisterViewState extends State<RegisterView> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Already have an account? ' , style: TextStyle(color: Colors.grey , fontSize: 14),),
+                      Text('Already have an account? ',
+                        style: TextStyle(color: Colors.grey, fontSize: 14),),
                       GestureDetector(
-                          onTap: (){
-                            Navigator.pushReplacementNamed(context, LoginView.routeName);
+                          onTap: () {
+                            Navigator.pushReplacementNamed(context,
+                                LoginView.routeName);
                           },
-                          child: Text('Login' , style: TextStyle(fontSize: 16 , color: KPrimaryColor))),
+                          child: Text('Login', style: TextStyle(fontSize: 16,
+                              color: KPrimaryColor))),
                     ],
                   ),
                 ],
